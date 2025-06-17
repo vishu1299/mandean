@@ -28,6 +28,7 @@ import {
   Users,
 } from "lucide-react";
 import { useState } from "react";
+import Footer from "@/app/student/common/footer";
 
 const BeforeLogin = () => {
   const [date, setDate] = useState(new Date());
@@ -296,6 +297,7 @@ const BeforeLogin = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
