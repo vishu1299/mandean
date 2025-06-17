@@ -194,15 +194,17 @@ const LoginForm = () => {
           </div>
 
           {/* Forgot Password */}
-          <div className="text-center mt-6">
-            <button
-              type="button"
-              onClick={handleForgotPassword}
-              className="text-blue-500 hover:text-blue-600 text-sm font-medium transition-colors duration-300"
-            >
-              Forgot Password?
-            </button>
-          </div>
+          <Link href="/auth/forgot-password">
+            <div className="text-center mt-6">
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                className="text-blue-500 hover:text-blue-600 text-sm font-medium transition-colors duration-300"
+              >
+                Forgot Password?
+              </button>
+            </div>
+          </Link>
         </div>
 
         {/* Security Note */}
