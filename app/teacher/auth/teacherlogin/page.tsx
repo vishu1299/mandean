@@ -145,7 +145,7 @@ const TeacherLoginForm = () => {
           </div>
 
           {/* Login Button - Simple redirect without validation */}
-          <Link href="/student/home">
+          <Link href="teacher/dashboard">
             <button
               type="button"
               className="w-full py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white border-none rounded-xl text-base font-semibold cursor-pointer transition-all duration-300 shadow-[0_8px_20px_rgba(59,130,246,0.3),0_4px_10px_rgba(59,130,246,0.2)] hover:shadow-[0_12px_28px_rgba(59,130,246,0.4),0_6px_14px_rgba(59,130,246,0.25)] hover:-translate-y-1 active:translate-y-0"
