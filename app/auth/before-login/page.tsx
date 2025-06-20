@@ -110,7 +110,7 @@ const BeforeLogin = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link
-                    href="/teacher"
+                    href="/teacher/auth/teacherlogin"
                     className="cursor-pointer rounded-lg p-3 hover:bg-green-50 transition-colors duration-150"
                   >
                     <div className="flex items-center gap-3">
@@ -166,7 +166,7 @@ const BeforeLogin = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link
-                    href="/auth/register/teacher"
+                    href="/teacher"
                     className="cursor-pointer rounded-lg p-3 hover:bg-green-50 transition-colors duration-150"
                   >
                     <div className="flex items-center gap-3">
