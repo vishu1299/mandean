@@ -52,7 +52,7 @@ const TeacherLoginForm = () => {
   return (
     <div
       style={{
-        backgroundImage: `url(https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/%D9%85%D9%86%D8%AF%D9%89_%D8%AF%D9%8A%D8%A7%D9%86%D8%A9_%D8%A7%D9%84%D8%B5%D8%A7%D8%A8%D8%A6%D8%A9_%D8%A7%D9%84%D9%85%D9%86%D8%AF%D8%A7%D8%A6%D9%8A%D8%A9_%D9%81%D9%8A_%D8%A8%D8%BA%D8%AF%D8%A7%D8%AF_01.jpg/960px-%D9%85%D9%86%D8%AF%D9%89_%D8%AF%D9%8A%D8%A7%D9%86%D8%A9_%D8%A7%D9%84%D8%B5%D8%A7%D8%A8%D8%A6%D8%A9_%D8%A7%D9%84%D9%85%D9%86%D8%AF%D8%A7%D8%A6%D9%8A%D8%A9_%D9%81%D9%8A_%D8%A8%D8%BA%D8%AF%D8%A7%D8%AF_01.jpg)`,
+        backgroundImage: `url(https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/%D9%85%D9%86%D8%AF%D9%89_%D8%AF%D9%8A%D8%A7%D9%86%D8%A9_%D8%A7%D9%84%D8%B5%D8%A7%D8%A8%D8%A6%D8%A9_%D8%A7%D9%84%D9%85%D9%86%D8%AF%D8%A7%D8%A6%D9%8A%D8%A9_%D9%81%D9%8A_%D8%A8%D8%BA%D8%AF%D8%A7%D8%AF_21.jpg/1280px-%D9%85%D9%86%D8%AF%D9%89_%D8%AF%D9%8A%D8%A7%D9%86%D8%A9_%D8%A7%D9%84%D8%B5%D8%A7%D8%A8%D8%A6%D8%A9_%D8%A7%D9%84%D9%85%D9%86%D8%AF%D8%A7%D8%A6%D9%8A%D8%A9_%D9%81%D9%8A_%D8%A8%D8%BA%D8%AF%D8%A7%D8%AF_21.jpg)`,
         backgroundSize: "cover",
         backgroundPosition: "center center",
         backgroundRepeat: "no-repeat",
@@ -145,7 +145,7 @@ const TeacherLoginForm = () => {
           </div>
 
           {/* Login Button - Simple redirect without validation */}
-          <Link href="teacher/dashboard">
+          <Link href="/teacher/dashboard">
             <button
               type="button"
               className="w-full py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white border-none rounded-xl text-base font-semibold cursor-pointer transition-all duration-300 shadow-[0_8px_20px_rgba(59,130,246,0.3),0_4px_10px_rgba(59,130,246,0.2)] hover:shadow-[0_12px_28px_rgba(59,130,246,0.4),0_6px_14px_rgba(59,130,246,0.25)] hover:-translate-y-1 active:translate-y-0"
