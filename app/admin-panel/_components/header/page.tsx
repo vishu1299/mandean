@@ -14,12 +14,12 @@ export default function Header() {
           height={100}
           alt="Picture of the company"
         />
-        <div className="text-[#E29806] text-sm ">
+        <div className="text-[#db9407] text-sm ">
           {" "}
           <span className="text-xs text-white">Mandaean</span> KNOWLEDGE CENTRE
         </div>
       </div>
-      <div className="bg-[#E29806] px-4 py-2 rounded flex items-center space-x-2">
+      <div className="bg-[#db9407] px-4 py-2 rounded flex items-center space-x-2">
         <Avatar className="w-8 h-8">
           <AvatarImage src="/profile.png" alt="Praveen Vats" />
           <AvatarFallback>PV</AvatarFallback>

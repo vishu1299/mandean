@@ -247,7 +247,7 @@ const BeforeLogin = () => {
 
       <div className="-mt-33 sm:-mt-60 md:-mt-80 lg:-mt-110 bg-black h-60 sm:h-80 md:h-110 lg:h-140 z-0 relative flex items-center justify-center">
         <div className="absolute bottom-8 sm:bottom-5 md:bottom-9 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          <Button size="sm" className="border border-1 border-white text-white">
+          <Button size="sm" className=" border-1 border-white text-white">
             <ChevronLeft />
           </Button>
           <Button size="sm" className="bg-sky-600 text-white">
