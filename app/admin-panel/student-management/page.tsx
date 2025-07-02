@@ -25,6 +25,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
   Command,
   MoreVertical,
   ChevronLeft,
@@ -33,7 +43,41 @@ import {
   BookOpen,
   GraduationCap,
   TrendingUp,
+  Clock,
+  Flag,
+  AlertTriangle,
+  Eye,
+  MessageSquare,
+  Activity,
+  Calendar,
 } from "lucide-react";
+
+interface AccessLog {
+  timestamp: string;
+  action: string;
+  duration: string;
+  device: string;
+  location: string;
+}
+
+interface Report {
+  id: string;
+  type: "academic" | "behavioral" | "technical";
+  severity: "low" | "medium" | "high";
+  title: string;
+  description: string;
+  reportedBy: string;
+  reportedAt: string;
+  status: "open" | "investigating" | "resolved";
+}
+
+interface Comment {
+  id: string;
+  author: string;
+  content: string;
+  timestamp: string;
+  type: "note" | "warning" | "achievement";
+}
 
 interface Student {
   id: number;
@@ -48,6 +92,13 @@ interface Student {
   totalCourses: number;
   completedCourses: number;
   progress: number;
+  lastAccess: string;
+  totalAccessTime: string;
+  accessLogs: AccessLog[];
+  reports: Report[];
+  comments: Comment[];
+  flags: string[];
+  status: "active" | "suspended" | "flagged";
 }
 
 const studentsData: Student[] = [
@@ -64,6 +115,43 @@ const studentsData: Student[] = [
     totalCourses: 2,
     completedCourses: 1,
     progress: 50,
+    lastAccess: "2024-01-15 14:30 PM",
+    totalAccessTime: "45h 30m",
+    accessLogs: [
+      {
+        timestamp: "2024-01-15 14:30 PM",
+        action: "Course Access - React Basics",
+        duration: "2h 15m",
+        device: "Desktop",
+        location: "Delhi, India",
+      },
+      {
+        timestamp: "2024-01-14 10:15 AM",
+        action: "Live Class Join",
+        duration: "1h 45m",
+        device: "Mobile",
+        location: "Delhi, India",
+      },
+      {
+        timestamp: "2024-01-13 16:20 PM",
+        action: "Assignment Submission",
+        duration: "30m",
+        device: "Desktop",
+        location: "Delhi, India",
+      },
+    ],
+    reports: [],
+    comments: [
+      {
+        id: "c1",
+        author: "Admin",
+        content: "Excellent progress in React fundamentals",
+        timestamp: "2024-01-10 09:00 AM",
+        type: "achievement",
+      },
+    ],
+    flags: [],
+    status: "active",
   },
   {
     id: 2,
@@ -78,6 +166,21 @@ const studentsData: Student[] = [
     totalCourses: 1,
     completedCourses: 1,
     progress: 100,
+    lastAccess: "2024-01-16 11:45 AM",
+    totalAccessTime: "32h 20m",
+    accessLogs: [
+      {
+        timestamp: "2024-01-16 11:45 AM",
+        action: "Course Completion - Digital Marketing",
+        duration: "3h 10m",
+        device: "Laptop",
+        location: "Mumbai, India",
+      },
+    ],
+    reports: [],
+    comments: [],
+    flags: [],
+    status: "active",
   },
   {
     id: 3,
@@ -92,6 +195,40 @@ const studentsData: Student[] = [
     totalCourses: 1,
     completedCourses: 0,
     progress: 75,
+    lastAccess: "2024-01-12 08:30 AM",
+    totalAccessTime: "28h 45m",
+    accessLogs: [
+      {
+        timestamp: "2024-01-12 08:30 AM",
+        action: "Course Access - Python Programming",
+        duration: "1h 20m",
+        device: "Desktop",
+        location: "Bangalore, India",
+      },
+    ],
+    reports: [
+      {
+        id: "r1",
+        type: "academic",
+        severity: "medium",
+        title: "Assignment Deadline Missed",
+        description: "Student missed the Python assignment deadline by 3 days",
+        reportedBy: "Instructor John",
+        reportedAt: "2024-01-10 15:30 PM",
+        status: "investigating",
+      },
+    ],
+    comments: [
+      {
+        id: "c2",
+        author: "Instructor",
+        content: "Student needs to improve time management",
+        timestamp: "2024-01-11 14:00 PM",
+        type: "warning",
+      },
+    ],
+    flags: ["late_submission"],
+    status: "flagged",
   },
   {
     id: 4,
@@ -106,6 +243,21 @@ const studentsData: Student[] = [
     totalCourses: 2,
     completedCourses: 1,
     progress: 60,
+    lastAccess: "2024-01-14 19:15 PM",
+    totalAccessTime: "67h 10m",
+    accessLogs: [
+      {
+        timestamp: "2024-01-14 19:15 PM",
+        action: "Live Class - Finance",
+        duration: "2h 00m",
+        device: "Tablet",
+        location: "Gujarat, India",
+      },
+    ],
+    reports: [],
+    comments: [],
+    flags: [],
+    status: "active",
   },
   {
     id: 5,
@@ -120,162 +272,326 @@ const studentsData: Student[] = [
     totalCourses: 1,
     completedCourses: 0,
     progress: 30,
-  },
-  {
-    id: 6,
-    name: "Anita Verma",
-    email: "anita.verma@gmail.com",
-    mobile: "+91 4321098765",
-    state: "Rajasthan",
-    registerDate: "26-05-2022 17:06 PM",
-    enrolledCourses: ["Graphic Design"],
-    enrolledLiveClass: [],
-    manualAccess: true,
-    totalCourses: 1,
-    completedCourses: 1,
-    progress: 100,
-  },
-  {
-    id: 7,
-    name: "Rohit Agarwal",
-    email: "rohit.agarwal@gmail.com",
-    mobile: "+91 3210987654",
-    state: "Haryana",
-    registerDate: "27-05-2022 10:30 AM",
-    enrolledCourses: ["Mobile App Development"],
-    enrolledLiveClass: ["finance", "marketing"],
-    manualAccess: false,
-    totalCourses: 1,
-    completedCourses: 0,
-    progress: 45,
-  },
-  {
-    id: 8,
-    name: "Kavya Reddy",
-    email: "kavya.reddy@gmail.com",
-    mobile: "+91 2109876543",
-    state: "Hyderabad",
-    registerDate: "28-05-2022 14:15 PM",
-    enrolledCourses: ["UI/UX Design", "Figma Mastery"],
-    enrolledLiveClass: [],
-    manualAccess: true,
-    totalCourses: 2,
-    completedCourses: 2,
-    progress: 100,
-  },
-  {
-    id: 9,
-    name: "Arjun Mehta",
-    email: "arjun.mehta@gmail.com",
-    mobile: "+91 1098765432",
-    state: "Chennai",
-    registerDate: "29-05-2022 09:45 AM",
-    enrolledCourses: ["Blockchain Development"],
-    enrolledLiveClass: ["finance"],
-    manualAccess: true,
-    totalCourses: 1,
-    completedCourses: 0,
-    progress: 80,
-  },
-  {
-    id: 10,
-    name: "Pooja Jain",
-    email: "pooja.jain@gmail.com",
-    mobile: "+91 0987654321",
-    state: "Pune",
-    registerDate: "30-05-2022 16:20 PM",
-    enrolledCourses: ["Content Writing", "SEO"],
-    enrolledLiveClass: ["marketing"],
-    manualAccess: false,
-    totalCourses: 2,
-    completedCourses: 1,
-    progress: 65,
-  },
-  {
-    id: 11,
-    name: "Karan Singh",
-    email: "karan.singh@gmail.com",
-    mobile: "+91 9876543211",
-    state: "Chandigarh",
-    registerDate: "31-05-2022 11:30 AM",
-    enrolledCourses: ["Cloud Computing", "AWS"],
-    enrolledLiveClass: [],
-    manualAccess: true,
-    totalCourses: 2,
-    completedCourses: 1,
-    progress: 90,
-  },
-  {
-    id: 12,
-    name: "Ritu Sharma",
-    email: "ritu.sharma@gmail.com",
-    mobile: "+91 8765432110",
-    state: "Jaipur",
-    registerDate: "01-06-2022 13:45 PM",
-    enrolledCourses: ["Photography", "Video Editing"],
-    enrolledLiveClass: ["finance", "design"],
-    manualAccess: true,
-    totalCourses: 2,
-    completedCourses: 0,
-    progress: 25,
-  },
-  {
-    id: 13,
-    name: "Deepak Yadav",
-    email: "deepak.yadav@gmail.com",
-    mobile: "+91 7654321099",
-    state: "Bihar",
-    registerDate: "02-06-2022 08:20 AM",
-    enrolledCourses: ["Cybersecurity", "Ethical Hacking"],
-    enrolledLiveClass: ["technology"],
-    manualAccess: true,
-    totalCourses: 2,
-    completedCourses: 1,
-    progress: 70,
-  },
-  {
-    id: 14,
-    name: "Meera Nair",
-    email: "meera.nair@gmail.com",
-    mobile: "+91 6543210988",
-    state: "Kerala",
-    registerDate: "03-06-2022 15:10 PM",
-    enrolledCourses: ["Digital Art", "Animation"],
-    enrolledLiveClass: ["design"],
-    manualAccess: true,
-    totalCourses: 2,
-    completedCourses: 2,
-    progress: 100,
-  },
-  {
-    id: 15,
-    name: "Suresh Patel",
-    email: "suresh.patel@gmail.com",
-    mobile: "+91 5432109877",
-    state: "Madhya Pradesh",
-    registerDate: "04-06-2022 12:25 PM",
-    enrolledCourses: ["Business Analytics"],
-    enrolledLiveClass: ["finance", "business"],
-    manualAccess: false,
-    totalCourses: 1,
-    completedCourses: 0,
-    progress: 40,
+    lastAccess: "2024-01-08 12:00 PM",
+    totalAccessTime: "15h 30m",
+    accessLogs: [
+      {
+        timestamp: "2024-01-08 12:00 PM",
+        action: "Course Access - Java Fundamentals",
+        duration: "45m",
+        device: "Mobile",
+        location: "UP, India",
+      },
+    ],
+    reports: [
+      {
+        id: "r2",
+        type: "behavioral",
+        severity: "high",
+        title: "Inappropriate Behavior in Live Class",
+        description:
+          "Student was disruptive during live session and used inappropriate language",
+        reportedBy: "Instructor Sarah",
+        reportedAt: "2024-01-05 16:45 PM",
+        status: "open",
+      },
+    ],
+    comments: [
+      {
+        id: "c3",
+        author: "Admin",
+        content: "Student has been warned about behavior. Monitoring required.",
+        timestamp: "2024-01-06 10:00 AM",
+        type: "warning",
+      },
+    ],
+    flags: ["behavioral_warning", "low_engagement"],
+    status: "suspended",
   },
 ];
+
+function AccessLogsModal({ student }: { student: Student }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-blue-600 hover:text-blue-800"
+        >
+          <Activity className="w-4 h-4 mr-1" />
+          View Logs
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-white">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Activity className="w-5 h-5" />
+            Access Logs - {student.name}
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+            <div>
+              <Label className="text-sm font-medium text-gray-600">
+                Last Access
+              </Label>
+              <p className="text-sm font-semibold">{student.lastAccess}</p>
+            </div>
+            <div>
+              <Label className="text-sm font-medium text-gray-600">
+                Total Access Time
+              </Label>
+              <p className="text-sm font-semibold">{student.totalAccessTime}</p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="font-semibold text-lg">Recent Activity</h3>
+            {student.accessLogs.map((log, index) => (
+              <div key={index} className="border rounded-lg p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium">{log.action}</span>
+                  <Badge variant="outline">{log.duration}</Badge>
+                </div>
+                <div className="grid grid-cols-3 gap-4 text-sm text-gray-600">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    {log.timestamp}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Activity className="w-3 h-3" />
+                    {log.device}
+                  </div>
+                  <div>{log.location}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function ReportsModal({ student }: { student: Student }) {
+  const [open, setOpen] = useState(false);
+
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case "high":
+        return "bg-red-100 text-red-800";
+      case "medium":
+        return "bg-yellow-100 text-yellow-800";
+      case "low":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "open":
+        return "bg-red-100 text-red-800";
+      case "investigating":
+        return "bg-yellow-100 text-yellow-800";
+      case "resolved":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-red-600 hover:text-red-800"
+        >
+          <Flag className="w-4 h-4 mr-1" />
+          Reports ({student.reports.length})
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-white">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Flag className="w-5 h-5" />
+            Reports & Flags - {student.name}
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          {student.flags.length > 0 && (
+            <div className="p-4 bg-yellow-50 rounded-lg">
+              <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-yellow-600" />
+                Active Flags
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {student.flags.map((flag, index) => (
+                  <Badge
+                    key={index}
+                    variant="destructive"
+                    className="bg-yellow-100 text-yellow-800"
+                  >
+                    {flag.replace("_", " ")}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-3">
+            <h3 className="font-semibold text-lg">Reports</h3>
+            {student.reports.length > 0 ? (
+              student.reports.map((report) => (
+                <div
+                  key={report.id}
+                  className="border rounded-lg p-4 space-y-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium">{report.title}</h4>
+                    <div className="flex gap-2">
+                      <Badge className={getSeverityColor(report.severity)}>
+                        {report.severity}
+                      </Badge>
+                      <Badge className={getStatusColor(report.status)}>
+                        {report.status}
+                      </Badge>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600">{report.description}</p>
+                  <div className="grid grid-cols-2 gap-4 text-sm text-gray-500">
+                    <div>Reported by: {report.reportedBy}</div>
+                    <div>Date: {report.reportedAt}</div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-8">No reports found</p>
+            )}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function CommentsModal({ student }: { student: Student }) {
+  const [open, setOpen] = useState(false);
+  const [newComment, setNewComment] = useState("");
+
+  const getCommentTypeColor = (type: string) => {
+    switch (type) {
+      case "achievement":
+        return "bg-green-100 text-green-800";
+      case "warning":
+        return "bg-red-100 text-red-800";
+      case "note":
+        return "bg-blue-100 text-blue-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-green-600 hover:text-green-800"
+        >
+          <MessageSquare className="w-4 h-4 mr-1" />
+          Comments ({student.comments.length})
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-white">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <MessageSquare className="w-5 h-5" />
+            Comments & Notes - {student.name}
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="new-comment">Add New Comment</Label>
+            <Textarea
+              id="new-comment"
+              placeholder="Enter your comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <div className="flex gap-2">
+              <Select defaultValue="note">
+                <SelectTrigger className="w-32">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  <SelectItem value="note">Note</SelectItem>
+                  <SelectItem value="warning">Warning</SelectItem>
+                  <SelectItem value="achievement">Achievement</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button onClick={() => setNewComment("")}>Add Comment</Button>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="font-semibold text-lg">Previous Comments</h3>
+            {student.comments.length > 0 ? (
+              student.comments.map((comment) => (
+                <div
+                  key={comment.id}
+                  className="border rounded-lg p-4 space-y-2"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">{comment.author}</span>
+                    <div className="flex items-center gap-2">
+                      <Badge className={getCommentTypeColor(comment.type)}>
+                        {comment.type}
+                      </Badge>
+                      <span className="text-sm text-gray-500">
+                        {comment.timestamp}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-700">{comment.content}</p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-8">No comments yet</p>
+            )}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export default function StudentManagement() {
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesPerPage, setEntriesPerPage] = useState("10");
   const [currentPage, setCurrentPage] = useState(1);
   const [stateFilter, setStateFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
-  // Filter students based on search term and state
+  // Filter students based on search term, state, and status
   const filteredStudents = useMemo(() => {
     let filtered = studentsData;
 
     // Filter by state
     if (stateFilter !== "all") {
       filtered = filtered.filter((student) => student.state === stateFilter);
+    }
+
+    // Filter by status
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((student) => student.status === statusFilter);
     }
 
     // Filter by search term
@@ -290,7 +606,7 @@ export default function StudentManagement() {
     }
 
     return filtered;
-  }, [searchTerm, stateFilter]);
+  }, [searchTerm, stateFilter, statusFilter]);
 
   // Calculate pagination
   const totalEntries = filteredStudents.length;
@@ -313,23 +629,6 @@ export default function StudentManagement() {
     filteredStudents.reduce((sum, student) => sum + student.progress, 0) /
       filteredStudents.length
   );
-
-  const getProgressBar = (progress: number) => {
-    const color =
-      progress >= 80
-        ? "bg-green-500"
-        : progress >= 50
-        ? "bg-yellow-500"
-        : "bg-red-500";
-    return (
-      <div className="w-full bg-gray-200 rounded-full h-2">
-        <div
-          className={`${color} h-2 rounded-full transition-all duration-300`}
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-    );
-  };
 
   const getStateBadge = (state: string) => {
     const stateColors = {
@@ -362,13 +661,28 @@ export default function StudentManagement() {
     );
   };
 
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "active":
+        return <Badge className="bg-green-100 text-green-800">Active</Badge>;
+      case "suspended":
+        return <Badge className="bg-red-100 text-red-800">Suspended</Badge>;
+      case "flagged":
+        return <Badge className="bg-yellow-100 text-yellow-800">Flagged</Badge>;
+      default:
+        return <Badge variant="secondary">{status}</Badge>;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 ">
-      <div className="w-full mx-auto max-w-6xl">
+      <div className="w-full mx-auto max-w-7xl">
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
           <Command className="w-6 h-6 text-gray-600" />
-          <span className="text-gray-800 font-semibold text-xl"> student</span>
+          <span className="text-gray-800 font-semibold text-xl">
+            Student Management
+          </span>
         </div>
 
         {/* Stats Cards */}
@@ -388,6 +702,7 @@ export default function StudentManagement() {
               </div>
             </div>
           </div>
+
           <div className="bg-white rounded-2xl p-6 shadow-sm">
             <div className="flex items-center gap-3">
               <div className="p-3 bg-green-100 rounded-xl">
@@ -403,6 +718,7 @@ export default function StudentManagement() {
               </div>
             </div>
           </div>
+
           <div className="bg-white rounded-2xl p-6 shadow-sm">
             <div className="flex items-center gap-3">
               <div className="p-3 bg-purple-100 rounded-xl">
@@ -418,6 +734,7 @@ export default function StudentManagement() {
               </div>
             </div>
           </div>
+
           <div className="bg-white rounded-2xl p-6 shadow-sm">
             <div className="flex items-center gap-3">
               <div className="p-3 bg-orange-100 rounded-xl">
@@ -438,7 +755,9 @@ export default function StudentManagement() {
         {/* Content */}
         <div className="bg-white rounded-2xl shadow-sm">
           <div className="p-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-8">STUDENT</h2>
+            <h2 className="text-lg font-bold text-gray-900 mb-8">
+              STUDENT MANAGEMENT
+            </h2>
 
             {/* Controls */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
@@ -454,7 +773,7 @@ export default function StudentManagement() {
                     <SelectTrigger className="w-24 h-11 rounded-xl">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       <SelectItem value="5">5</SelectItem>
                       <SelectItem value="10">10</SelectItem>
                       <SelectItem value="25">25</SelectItem>
@@ -474,13 +793,30 @@ export default function StudentManagement() {
                     <SelectTrigger className="w-36 h-11 rounded-xl">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       <SelectItem value="all">All States</SelectItem>
                       <SelectItem value="Delhi">Delhi</SelectItem>
                       <SelectItem value="Mumbai">Mumbai</SelectItem>
                       <SelectItem value="Bangalore">Bangalore</SelectItem>
                       <SelectItem value="Gujarat">Gujarat</SelectItem>
                       <SelectItem value="UP">UP</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-gray-600 font-semibold">
+                    Status:
+                  </span>
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="w-36 h-11 rounded-xl">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                      <SelectItem value="all">All Status</SelectItem>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="suspended">Suspended</SelectItem>
+                      <SelectItem value="flagged">Flagged</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -519,14 +855,14 @@ export default function StudentManagement() {
                     <TableHead className="min-w-[120px] text-gray-800 font-bold py-6 px-8">
                       State
                     </TableHead>
-                    <TableHead className="min-w-[180px] text-gray-800 font-bold py-6 px-8">
-                      Register Date
+                    <TableHead className="min-w-[140px] text-gray-800 font-bold py-6 px-8">
+                      Last Access
                     </TableHead>
-                    <TableHead className="min-w-[180px] text-gray-800 font-bold py-6 px-8">
-                      Enrolled courses
+                    <TableHead className="min-w-[120px] text-gray-800 font-bold py-6 px-8">
+                      Status
                     </TableHead>
-                    <TableHead className="min-w-[160px] text-gray-800 font-bold py-6 px-8">
-                      Enrolled Live Class
+                    <TableHead className="min-w-[200px] text-gray-800 font-bold py-6 px-8">
+                      Activity & Reports
                     </TableHead>
                     <TableHead className="min-w-[140px] text-gray-800 font-bold py-6 px-8">
                       Manual Access
@@ -557,9 +893,19 @@ export default function StudentManagement() {
                                 .join("")
                                 .toUpperCase()}
                             </div>
-                            <span className="text-gray-800 font-semibold">
-                              {student.name}
-                            </span>
+                            <div>
+                              <span className="text-gray-800 font-semibold block">
+                                {student.name}
+                              </span>
+                              {student.flags.length > 0 && (
+                                <div className="flex items-center gap-1 mt-1">
+                                  <AlertTriangle className="w-3 h-3 text-yellow-500" />
+                                  <span className="text-xs text-yellow-600">
+                                    {student.flags.length} flag(s)
+                                  </span>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell className="text-gray-600 py-6 px-8 text-sm">
@@ -571,47 +917,27 @@ export default function StudentManagement() {
                         <TableCell className="py-6 px-8">
                           {getStateBadge(student.state)}
                         </TableCell>
-                        <TableCell className="text-gray-600 py-6 px-8 text-sm font-medium whitespace-nowrap">
-                          {student.registerDate}
+                        <TableCell className="py-6 px-8">
+                          <div className="space-y-1">
+                            <div className="text-sm font-medium">
+                              {student.lastAccess}
+                            </div>
+                            <div className="text-xs text-gray-500 flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {student.totalAccessTime}
+                            </div>
+                          </div>
                         </TableCell>
                         <TableCell className="py-6 px-8">
-                          {student.enrolledCourses.length > 0 ? (
-                            <div className="space-y-1">
-                              {student.enrolledCourses.map((course, idx) => (
-                                <div
-                                  key={idx}
-                                  className="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full inline-block mr-1 mb-1 font-medium"
-                                >
-                                  {course}
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <span className="text-gray-400">-</span>
-                          )}
+                          {getStatusBadge(student.status)}
                         </TableCell>
                         <TableCell className="py-6 px-8">
-                          {student.enrolledLiveClass.length > 0 ? (
-                            <div className="space-y-2">
-                              {student.enrolledLiveClass.map(
-                                (liveClass, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="flex items-center gap-2"
-                                  >
-                                    <div className="w-2 h-2 bg-emerald-500 rounded-full flex-shrink-0"></div>
-                                    <span className="text-sm font-medium text-gray-700">
-                                      {liveClass}
-                                    </span>
-                                  </div>
-                                )
-                              )}
-                            </div>
-                          ) : (
-                            <span className="text-gray-400">-</span>
-                          )}
+                          <div className="space-y-2">
+                            <AccessLogsModal student={student} />
+                            <ReportsModal student={student} />
+                            <CommentsModal student={student} />
+                          </div>
                         </TableCell>
-
                         <TableCell className="py-6 px-8">
                           {student.manualAccess && (
                             <Button
@@ -635,16 +961,23 @@ export default function StudentManagement() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                               align="end"
-                              className="rounded-xl"
+                              className="rounded-xl bg-white"
                             >
-                              <DropdownMenuItem>View Profile</DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Eye className="w-4 h-4 mr-2" />
+                                View Profile
+                              </DropdownMenuItem>
                               <DropdownMenuItem>Edit Student</DropdownMenuItem>
                               <DropdownMenuItem>
                                 Manage Courses
                               </DropdownMenuItem>
                               <DropdownMenuItem>View Progress</DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Flag className="w-4 h-4 mr-2" />
+                                Add Flag
+                              </DropdownMenuItem>
                               <DropdownMenuItem className="text-red-600">
-                                Delete
+                                Suspend Student
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -654,7 +987,7 @@ export default function StudentManagement() {
                   ) : (
                     <TableRow>
                       <TableCell
-                        colSpan={11}
+                        colSpan={12}
                         className="text-center text-gray-500 py-16 px-8"
                       >
                         <div className="flex flex-col items-center gap-4">

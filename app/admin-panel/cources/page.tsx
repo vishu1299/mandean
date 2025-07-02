@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-
 import { Tag, Database, Settings, Star } from "lucide-react";
 
 export default function Courses() {
@@ -177,6 +176,9 @@ export default function Courses() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Price
                   </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Donation Collected
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -211,6 +213,9 @@ export default function Courses() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     ₹1000
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    ₹2,450
                   </td>
                 </tr>
 
@@ -248,6 +253,9 @@ export default function Courses() {
                       Free
                     </span>
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    ₹1,200
+                  </td>
                 </tr>
 
                 <tr>
@@ -284,6 +292,9 @@ export default function Courses() {
                       Free
                     </span>
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    ₹850
+                  </td>
                 </tr>
 
                 <tr>
@@ -317,6 +328,9 @@ export default function Courses() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     ₹200
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    ₹500
                   </td>
                 </tr>
 
@@ -354,6 +368,9 @@ export default function Courses() {
                       Free
                     </span>
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    ₹3,200
+                  </td>
                 </tr>
 
                 <tr>
@@ -387,6 +404,9 @@ export default function Courses() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     ₹5000
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    ₹1,750
                   </td>
                 </tr>
               </tbody>

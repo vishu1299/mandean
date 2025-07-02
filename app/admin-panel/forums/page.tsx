@@ -11,225 +11,319 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Command,
-  MoreVertical,
   ChevronLeft,
   ChevronRight,
   MessageSquare,
   Users,
   TrendingUp,
+  Megaphone,
+  BookOpen,
+  Plus,
+  Heart,
+  MessageCircle,
+  Share2,
+  Pin,
+  Lock,
+  Globe,
+  GraduationCap,
+  Send,
+  Eye,
+  ThumbsUp,
+  Reply,
 } from "lucide-react";
+
+// Types
+interface User {
+  id: string;
+  name: string;
+  role: "admin" | "teacher" | "student" | "guest";
+  avatar?: string;
+}
 
 interface ForumPost {
   id: number;
   userName: string;
+  userRole: "admin" | "teacher" | "student";
   query: string;
   queryBrief: string;
+  content: string;
   tags: string;
-  status: "active" | "inactive" | "pending";
+  status: "active" | "inactive" | "pending" | "pinned";
   createdDate: string;
   replies: number;
   views: number;
+  likes: number;
+  courseId?: string;
+  courseName?: string;
+  isPinned: boolean;
+  isAnnouncement: boolean;
+  level: "public" | "general" | "course";
 }
 
+// Mock Data
+const currentUser: User = {
+  id: "1",
+  name: "John Doe",
+  role: "student", // Change this to test different roles: "guest", "student", "teacher", "admin"
+};
+
 const forumData: ForumPost[] = [
+  // Public Announcements (Level 1)
   {
     id: 1,
-    userName: "Love",
-    query: "Kya lagta 2024 mai kon jeetega",
-    queryBrief: "Who will be the pm in 2024",
-    tags: "Political",
-    status: "active",
-    createdDate: "2022-05-18T12:55:40",
-    replies: 24,
-    views: 156,
+    userName: "Admin",
+    userRole: "admin",
+    query: "Platform Maintenance Notice",
+    queryBrief: "Scheduled maintenance on Sunday",
+    content:
+      "The platform will be under maintenance this Sunday from 2 AM to 6 AM IST. Please plan accordingly.",
+    tags: "Announcement",
+    status: "pinned",
+    createdDate: "2024-01-15T10:00:00",
+    replies: 0,
+    views: 1250,
+    likes: 45,
+    isPinned: true,
+    isAnnouncement: true,
+    level: "public",
   },
   {
     id: 2,
-    userName: "Love",
-    query: "Who was the best PM of India?",
-    queryBrief: "Indira Gandhi",
-    tags: "Political",
+    userName: "Admin",
+    userRole: "admin",
+    query: "New Course Launch",
+    queryBrief: "Advanced React Development course now available",
+    content:
+      "We're excited to announce the launch of our new Advanced React Development course. Early bird discount available!",
+    tags: "Course Launch",
     status: "active",
-    createdDate: "2022-05-18T12:57:56",
-    replies: 18,
-    views: 89,
+    createdDate: "2024-01-14T14:30:00",
+    replies: 0,
+    views: 890,
+    likes: 67,
+    isPinned: false,
+    isAnnouncement: true,
+    level: "public",
   },
+
+  // General Forum (Level 2)
   {
     id: 3,
     userName: "Rahul",
+    userRole: "student",
     query: "Best programming language for beginners?",
     queryBrief: "Looking for advice on first programming language",
-    tags: "Technology",
+    content:
+      "I'm new to programming and confused about which language to start with. I've heard Python is good for beginners, but also considering JavaScript. What do you all think?",
+    tags: "Programming",
     status: "active",
-    createdDate: "2022-05-19T09:30:15",
+    createdDate: "2024-01-13T09:30:15",
     replies: 32,
     views: 245,
+    likes: 18,
+    isPinned: false,
+    isAnnouncement: false,
+    level: "general",
   },
   {
     id: 4,
     userName: "Priya",
-    query: "How to prepare for UPSC?",
-    queryBrief: "Need guidance for civil services preparation",
-    tags: "Education",
-    status: "pending",
-    createdDate: "2022-05-19T14:22:30",
-    replies: 7,
-    views: 67,
+    userRole: "student",
+    query: "Study group for Data Science",
+    queryBrief: "Looking for study partners",
+    content:
+      "Anyone interested in forming a study group for Data Science? We can meet weekly to discuss concepts and work on projects together.",
+    tags: "Study Group",
+    status: "active",
+    createdDate: "2024-01-12T14:22:30",
+    replies: 15,
+    views: 167,
+    likes: 23,
+    isPinned: false,
+    isAnnouncement: false,
+    level: "general",
   },
+
+  // Course-specific Forum (Level 3)
   {
     id: 5,
-    userName: "Amit",
-    query: "Climate change effects in India",
-    queryBrief: "Discussion on environmental impact",
-    tags: "Environment",
-    status: "active",
-    createdDate: "2022-05-20T11:45:20",
-    replies: 15,
+    userName: "Dr. Smith",
+    userRole: "teacher",
+    query: "Week 3 Assignment Guidelines",
+    queryBrief: "Important instructions for React assignment",
+    content:
+      "Please note the updated guidelines for Week 3 assignment. Focus on component lifecycle and state management. Deadline: Friday 11:59 PM.",
+    tags: "Assignment",
+    status: "pinned",
+    createdDate: "2024-01-11T11:45:20",
+    replies: 8,
     views: 123,
+    likes: 12,
+    courseId: "react-101",
+    courseName: "React Fundamentals",
+    isPinned: true,
+    isAnnouncement: false,
+    level: "course",
   },
   {
     id: 6,
-    userName: "Sneha",
-    query: "Women empowerment initiatives",
-    queryBrief: "Government schemes for women development",
-    tags: "Social",
+    userName: "Prof. Johnson",
+    userRole: "teacher",
+    query: "Additional Resources for Machine Learning",
+    queryBrief: "Supplementary materials and readings",
+    content:
+      "I've uploaded additional resources in the course materials section. These will help you understand the concepts better. Please review before next class.",
+    tags: "Resources",
     status: "active",
-    createdDate: "2022-05-20T16:18:45",
+    createdDate: "2024-01-10T16:18:45",
     replies: 21,
     views: 178,
-  },
-  {
-    id: 7,
-    userName: "Vikash",
-    query: "Startup funding in India",
-    queryBrief: "How to get investment for new business",
-    tags: "Business",
-    status: "inactive",
-    createdDate: "2022-05-21T08:12:10",
-    replies: 9,
-    views: 45,
-  },
-  {
-    id: 8,
-    userName: "Anita",
-    query: "Digital India progress",
-    queryBrief: "Impact of digitalization on rural areas",
-    tags: "Technology",
-    status: "active",
-    createdDate: "2022-05-21T13:55:30",
-    replies: 28,
-    views: 201,
-  },
-  {
-    id: 9,
-    userName: "Deepak",
-    query: "Indian economy post COVID",
-    queryBrief: "Recovery and growth prospects",
-    tags: "Economics",
-    status: "active",
-    createdDate: "2022-05-22T10:15:25",
-    replies: 19,
-    views: 134,
-  },
-  {
-    id: 10,
-    userName: "Kavya",
-    query: "Space missions by ISRO",
-    queryBrief: "Recent achievements and future plans",
-    tags: "Science",
-    status: "active",
-    createdDate: "2022-05-22T15:30:40",
-    replies: 26,
-    views: 189,
-  },
-  {
-    id: 11,
-    userName: "Rohit",
-    query: "Cricket World Cup predictions",
-    queryBrief: "Which team will win the next tournament",
-    tags: "Sports",
-    status: "active",
-    createdDate: "2022-05-23T09:45:15",
-    replies: 41,
-    views: 298,
-  },
-  {
-    id: 12,
-    userName: "Pooja",
-    query: "Healthy lifestyle tips",
-    queryBrief: "Diet and exercise recommendations",
-    tags: "Health",
-    status: "pending",
-    createdDate: "2022-05-23T14:20:30",
-    replies: 12,
-    views: 87,
-  },
-  {
-    id: 13,
-    userName: "Arjun",
-    query: "Renewable energy in India",
-    queryBrief: "Solar and wind power development",
-    tags: "Environment",
-    status: "active",
-    createdDate: "2022-05-24T11:10:20",
-    replies: 17,
-    views: 142,
-  },
-  {
-    id: 14,
-    userName: "Ritu",
-    query: "Online education effectiveness",
-    queryBrief: "Pros and cons of digital learning",
-    tags: "Education",
-    status: "active",
-    createdDate: "2022-05-24T16:55:45",
-    replies: 23,
-    views: 167,
-  },
-  {
-    id: 15,
-    userName: "Karan",
-    query: "Cryptocurrency regulations",
-    queryBrief: "Government policies on digital currency",
-    tags: "Finance",
-    status: "inactive",
-    createdDate: "2022-05-25T08:30:10",
-    replies: 14,
-    views: 95,
+    likes: 34,
+    courseId: "ml-advanced",
+    courseName: "Advanced Machine Learning",
+    isPinned: false,
+    isAnnouncement: false,
+    level: "course",
   },
 ];
 
-export default function Forum() {
+const mockReplies = [
+  {
+    id: "r1",
+    postId: 3,
+    userName: "Amit",
+    userRole: "student",
+    content:
+      "I'd recommend starting with Python. It has a very readable syntax and is great for beginners.",
+    createdDate: "2024-01-13T10:15:00",
+    likes: 5,
+  },
+  {
+    id: "r2",
+    postId: 3,
+    userName: "Sarah",
+    userRole: "teacher",
+    content:
+      "Both Python and JavaScript are excellent choices. Python for data science and backend, JavaScript for web development.",
+    createdDate: "2024-01-13T11:30:00",
+    likes: 12,
+  },
+];
+
+// Components
+function PublicAnnouncements() {
+  const publicPosts = forumData.filter((post) => post.level === "public");
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="w-full mx-auto max-w-6xl p-6">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-8">
+          <Megaphone className="w-6 h-6 text-blue-600" />
+          <span className="text-gray-800 font-semibold text-xl">
+            Public Announcements
+          </span>
+          <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+            <Globe className="w-3 h-3 mr-1" />
+            Public Access
+          </Badge>
+        </div>
+
+        {/* Announcements Grid */}
+        <div className="space-y-6">
+          {publicPosts.map((post) => (
+            <Card
+              key={post.id}
+              className={`${post.isPinned ? "border-blue-500 bg-blue-50" : ""}`}
+            >
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    {post.isPinned && <Pin className="w-4 h-4 text-blue-600" />}
+                    <div>
+                      <CardTitle className="text-lg">{post.query}</CardTitle>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {post.queryBrief}
+                      </p>
+                    </div>
+                  </div>
+                  <Badge className="bg-red-100 text-red-800">
+                    <Megaphone className="w-3 h-3 mr-1" />
+                    Announcement
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-700 mb-4">{post.content}</p>
+                <div className="flex items-center justify-between text-sm text-gray-500">
+                  <div className="flex items-center gap-4">
+                    <span className="flex items-center gap-1">
+                      <Eye className="w-4 h-4" />
+                      {post.views} views
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Heart className="w-4 h-4" />
+                      {post.likes} likes
+                    </span>
+                  </div>
+                  <span>
+                    Posted by {post.userName} •{" "}
+                    {new Date(post.createdDate).toLocaleDateString()}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Sign In Prompt */}
+        <Card className="mt-8 border-dashed border-2 border-gray-300">
+          <CardContent className="text-center py-12">
+            <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              Join the Discussion
+            </h3>
+            <p className="text-gray-500 mb-6">
+              Sign in to access the full forum, interact with other users, and
+              participate in course discussions.
+            </p>
+            <Button className="bg-blue-600 hover:bg-blue-700">
+              Sign In to Continue
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function GeneralForum() {
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesPerPage, setEntriesPerPage] = useState("10");
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [newPostOpen, setNewPostOpen] = useState(false);
 
-  // Filter forum posts based on search term and status
+  const generalPosts = forumData.filter((post) => post.level === "general");
+
   const filteredPosts = useMemo(() => {
-    let filtered = forumData;
+    let filtered = generalPosts;
 
-    // Filter by status
     if (statusFilter !== "all") {
       filtered = filtered.filter((post) => post.status === statusFilter);
     }
 
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(
         (post) =>
@@ -241,9 +335,8 @@ export default function Forum() {
     }
 
     return filtered;
-  }, [searchTerm, statusFilter]);
+  }, [searchTerm, statusFilter, generalPosts]);
 
-  // Calculate pagination
   const totalEntries = filteredPosts.length;
   const entriesPerPageNum = Number.parseInt(entriesPerPage);
   const totalPages = Math.ceil(totalEntries / entriesPerPageNum);
@@ -251,126 +344,142 @@ export default function Forum() {
   const endIndex = Math.min(startIndex + entriesPerPageNum, totalEntries);
   const currentEntries = filteredPosts.slice(startIndex, endIndex);
 
-  // Calculate stats
   const totalReplies = filteredPosts.reduce(
     (sum, post) => sum + post.replies,
     0
   );
   const totalViews = filteredPosts.reduce((sum, post) => sum + post.views, 0);
-  const activePosts = filteredPosts.filter(
-    (post) => post.status === "active"
-  ).length;
-
-  const getStatusBadge = (status: string) => {
-    const statusStyles = {
-      active: "bg-emerald-500 text-white shadow-sm",
-      inactive: "bg-red-500 text-white shadow-sm",
-      pending: "bg-amber-500 text-white shadow-sm",
-    };
-
-    return (
-      <span
-        className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${
-          statusStyles[status as keyof typeof statusStyles]
-        }`}
-      >
-        {status}
-      </span>
-    );
-  };
-
-  const getTagBadge = (tag: string) => {
-    const tagColors = {
-      Political: "bg-purple-100 text-purple-800",
-      Technology: "bg-blue-100 text-blue-800",
-      Education: "bg-green-100 text-green-800",
-      Environment: "bg-teal-100 text-teal-800",
-      Social: "bg-pink-100 text-pink-800",
-      Business: "bg-orange-100 text-orange-800",
-      Economics: "bg-indigo-100 text-indigo-800",
-      Science: "bg-cyan-100 text-cyan-800",
-      Sports: "bg-red-100 text-red-800",
-      Health: "bg-lime-100 text-lime-800",
-      Finance: "bg-yellow-100 text-yellow-800",
-    };
-
-    return (
-      <span
-        className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${
-          tagColors[tag as keyof typeof tagColors] ||
-          "bg-gray-100 text-gray-800"
-        }`}
-      >
-        {tag}
-      </span>
-    );
-  };
-
-  const formatDate = (dateString: string) => {
-    return dateString.replace("T", " ").substring(0, 19);
-  };
 
   return (
-    <div className="min-h-screen bg-gray-50 ">
-      <div className="w-full mx-auto max-w-6xl">
+    <div className="min-h-screen bg-gray-50">
+      <div className="w-full mx-auto max-w-6xl p-6">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-8 p-3">
-          <Command className="w-6 h-6 text-gray-600" />
-          <span className="text-gray-800 font-semibold text-xl"> Forum</span>
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <MessageSquare className="w-6 h-6 text-green-600" />
+            <span className="text-gray-800 font-semibold text-xl">
+              General Forum
+            </span>
+            <Badge variant="secondary" className="bg-green-100 text-green-800">
+              <Users className="w-3 h-3 mr-1" />
+              Community
+            </Badge>
+          </div>
+          <Dialog open={newPostOpen} onOpenChange={setNewPostOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-green-600 hover:bg-green-700">
+                <Plus className="w-4 h-4 mr-2" />
+                New Post
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Create New Post</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="title">Title</Label>
+                  <Input id="title" placeholder="Enter post title..." />
+                </div>
+                <div>
+                  <Label htmlFor="brief">Brief Description</Label>
+                  <Input id="brief" placeholder="Brief description..." />
+                </div>
+                <div>
+                  <Label htmlFor="content">Content</Label>
+                  <Textarea
+                    id="content"
+                    placeholder="Write your post content..."
+                    rows={6}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="tags">Tags</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a tag" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="programming">Programming</SelectItem>
+                      <SelectItem value="study-group">Study Group</SelectItem>
+                      <SelectItem value="career">Career</SelectItem>
+                      <SelectItem value="general">General</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setNewPostOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button onClick={() => setNewPostOpen(false)}>Post</Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-blue-100 rounded-xl">
-                <MessageSquare className="w-6 h-6 text-blue-600" />
+          <Card className="border-0 shadow-sm">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-blue-100 rounded-xl">
+                  <MessageSquare className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Posts
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {filteredPosts.length}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Posts</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {filteredPosts.length}
-                </p>
+            </CardContent>
+          </Card>
+          <Card className="border-0 shadow-sm">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-green-100 rounded-xl">
+                  <Users className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Replies
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {totalReplies}
+                  </p>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-green-100 rounded-xl">
-                <Users className="w-6 h-6 text-green-600" />
+            </CardContent>
+          </Card>
+          <Card className="border-0 shadow-sm">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-purple-100 rounded-xl">
+                  <TrendingUp className="w-6 h-6 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Views
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {totalViews.toLocaleString()}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Total Replies
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {totalReplies}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-purple-100 rounded-xl">
-                <TrendingUp className="w-6 h-6 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Views</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {totalViews.toLocaleString()}
-                </p>
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Content */}
-        <div className="bg-white rounded-2xl shadow-sm">
-          <div className="p-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-8">FORUM LIST</h2>
-
-            {/* Controls */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
+        {/* Forum Posts */}
+        <Card className="border-0 shadow-sm">
+          <CardHeader>
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
               <div className="flex flex-wrap items-center gap-6">
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-gray-600 font-semibold">
@@ -380,203 +489,109 @@ export default function Forum() {
                     value={entriesPerPage}
                     onValueChange={setEntriesPerPage}
                   >
-                    <SelectTrigger className="w-24 h-11 rounded-xl">
+                    <SelectTrigger className="w-24">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="5">5</SelectItem>
                       <SelectItem value="10">10</SelectItem>
                       <SelectItem value="25">25</SelectItem>
-                      <SelectItem value="50">50</SelectItem>
                     </SelectContent>
                   </Select>
                   <span className="text-sm text-gray-600 font-semibold">
                     entries
                   </span>
                 </div>
-
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-gray-600 font-semibold">
                     Status:
                   </span>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-36 h-11 rounded-xl">
+                    <SelectTrigger className="w-36">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Status</SelectItem>
                       <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="inactive">Inactive</SelectItem>
                       <SelectItem value="pending">Pending</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
-
               <div className="flex items-center gap-3">
                 <span className="text-sm text-gray-600 font-semibold">
                   Search:
                 </span>
                 <Input
-                  placeholder="Search posts, users, tags..."
+                  placeholder="Search posts..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-64 h-11 rounded-xl"
+                  className="w-64"
                 />
               </div>
             </div>
-
-            {/* Table */}
-            <div className="overflow-x-auto rounded-2xl">
-              <Table className="min-w-full">
-                <TableHeader>
-                  <TableRow className="bg-gray-50 hover:bg-gray-50">
-                    <TableHead className="w-16 min-w-[60px] text-gray-800 font-bold py-6 px-8 rounded-tl-2xl">
-                      #
-                    </TableHead>
-                    <TableHead className="min-w-[140px] text-gray-800 font-bold py-6 px-8">
-                      User name
-                    </TableHead>
-                    <TableHead className="min-w-[220px] text-gray-800 font-bold py-6 px-8">
-                      Query
-                    </TableHead>
-                    <TableHead className="min-w-[200px] text-gray-800 font-bold py-6 px-8">
-                      Query brief
-                    </TableHead>
-                    <TableHead className="min-w-[120px] text-gray-800 font-bold py-6 px-8">
-                      Tags
-                    </TableHead>
-                    <TableHead className="min-w-[100px] text-gray-800 font-bold py-6 px-8">
-                      Status
-                    </TableHead>
-                    <TableHead className="min-w-[100px] text-gray-800 font-bold py-6 px-8">
-                      Engagement
-                    </TableHead>
-                    <TableHead className="min-w-[180px] text-gray-800 font-bold py-6 px-8">
-                      Created date
-                    </TableHead>
-                    <TableHead className="min-w-[100px] text-gray-800 font-bold py-6 px-8 rounded-tr-2xl">
-                      Actions
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {currentEntries.length > 0 ? (
-                    currentEntries.map((post, index) => (
-                      <TableRow
-                        key={post.id}
-                        className={`${
-                          index % 2 === 1 ? "bg-gray-50" : "bg-white"
-                        } hover:bg-blue-50 transition-all duration-200 ${
-                          index === currentEntries.length - 1
-                            ? "rounded-b-2xl"
-                            : ""
-                        }`}
-                      >
-                        <TableCell className="text-gray-600 py-6 px-8 font-bold text-lg">
-                          {startIndex + index + 1}
-                        </TableCell>
-                        <TableCell className="py-6 px-8">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                              {post.userName.charAt(0).toUpperCase()}
-                            </div>
-                            <span className="text-gray-800 font-semibold">
-                              {post.userName}
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-gray-700 py-6 px-8 font-medium">
-                          {post.query}
-                        </TableCell>
-                        <TableCell className="text-gray-600 py-6 px-8">
-                          {post.queryBrief}
-                        </TableCell>
-                        <TableCell className="py-6 px-8">
-                          {getTagBadge(post.tags)}
-                        </TableCell>
-                        <TableCell className="py-6 px-8">
-                          {getStatusBadge(post.status)}
-                        </TableCell>
-                        <TableCell className="py-6 px-8">
-                          <div className="flex flex-col gap-1">
-                            <div className="flex items-center gap-1 text-xs text-gray-600">
-                              <MessageSquare className="w-3 h-3" />
-                              <span className="font-medium">
-                                {post.replies}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-1 text-xs text-gray-600">
-                              <TrendingUp className="w-3 h-3" />
-                              <span className="font-medium">{post.views}</span>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-gray-600 py-6 px-8 text-sm font-medium">
-                          {formatDate(post.createdDate)}
-                        </TableCell>
-                        <TableCell className="py-6 px-8">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="w-10 h-10 p-0 bg-gray-800 hover:bg-gray-700 rounded-xl"
-                              >
-                                <MoreVertical className="w-4 h-4 text-white" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              align="end"
-                              className="rounded-xl"
-                            >
-                              <DropdownMenuItem>View Details</DropdownMenuItem>
-                              <DropdownMenuItem>Edit Post</DropdownMenuItem>
-                              <DropdownMenuItem>Change Status</DropdownMenuItem>
-                              <DropdownMenuItem>Pin Post</DropdownMenuItem>
-                              <DropdownMenuItem className="text-red-600">
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        colSpan={9}
-                        className="text-center text-gray-500 py-16 px-8"
-                      >
-                        <div className="flex flex-col items-center gap-4">
-                          <MessageSquare className="w-16 h-16 text-gray-300" />
-                          <div className="text-xl font-semibold">
-                            No forum posts found
-                          </div>
-                          <div className="text-sm text-gray-400">
-                            Try adjusting your search or filters
-                          </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {currentEntries.map((post) => (
+                <Card
+                  key={post.id}
+                  className="hover:shadow-md transition-shadow border-0"
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                          {post.userName.charAt(0).toUpperCase()}
                         </div>
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
+                        <div>
+                          <h3 className="font-semibold text-lg">
+                            {post.query}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            by {post.userName}
+                          </p>
+                        </div>
+                      </div>
+                      <Badge className="bg-blue-100 text-blue-800">
+                        {post.tags}
+                      </Badge>
+                    </div>
+                    <p className="text-gray-700 mb-4">{post.content}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-6 text-sm text-gray-500">
+                        <button className="flex items-center gap-1 hover:text-blue-600">
+                          <ThumbsUp className="w-4 h-4" />
+                          {post.likes}
+                        </button>
+                        <button className="flex items-center gap-1 hover:text-green-600">
+                          <MessageCircle className="w-4 h-4" />
+                          {post.replies}
+                        </button>
+                        <span className="flex items-center gap-1">
+                          <Eye className="w-4 h-4" />
+                          {post.views}
+                        </span>
+                        <button className="flex items-center gap-1 hover:text-purple-600">
+                          <Share2 className="w-4 h-4" />
+                          Share
+                        </button>
+                      </div>
+                      <span className="text-sm text-gray-500">
+                        {new Date(post.createdDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
 
             {/* Pagination */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mt-8 pt-8">
+            <div className="flex items-center justify-between mt-8">
               <div className="text-sm text-gray-600">
-                Showing{" "}
-                <span className="font-bold text-gray-900">
-                  {currentEntries.length > 0 ? startIndex + 1 : 0}
-                </span>{" "}
-                to <span className="font-bold text-gray-900">{endIndex}</span>{" "}
-                of{" "}
-                <span className="font-bold text-gray-900">{totalEntries}</span>{" "}
-                entries
+                Showing {currentEntries.length > 0 ? startIndex + 1 : 0} to{" "}
+                {endIndex} of {totalEntries} entries
               </div>
-
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
@@ -584,57 +599,419 @@ export default function Forum() {
                   onClick={() =>
                     setCurrentPage((prev) => Math.max(prev - 1, 1))
                   }
-                  disabled={currentPage === 1 || totalEntries === 0}
-                  className="w-12 h-12 p-0 rounded-xl"
+                  disabled={currentPage === 1}
                 >
-                  <ChevronLeft className="w-5 h-5" />
+                  <ChevronLeft className="w-4 h-4" />
                 </Button>
-
                 {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                  let pageNum;
-                  if (totalPages <= 5) {
-                    pageNum = i + 1;
-                  } else if (currentPage <= 3) {
-                    pageNum = i + 1;
-                  } else if (currentPage >= totalPages - 2) {
-                    pageNum = totalPages - 4 + i;
-                  } else {
-                    pageNum = currentPage - 2 + i;
-                  }
-
+                  const pageNum = i + 1;
                   return (
                     <Button
                       key={pageNum}
                       variant={currentPage === pageNum ? "default" : "outline"}
                       size="sm"
                       onClick={() => setCurrentPage(pageNum)}
-                      className={`w-12 h-12 p-0 rounded-xl font-semibold ${
-                        currentPage === pageNum
-                          ? "bg-gray-900 text-white shadow-lg"
-                          : ""
-                      }`}
                     >
                       {pageNum}
                     </Button>
                   );
                 })}
-
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() =>
                     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                   }
-                  disabled={currentPage === totalPages || totalEntries === 0}
-                  className="w-12 h-12 p-0 rounded-xl"
+                  disabled={currentPage === totalPages}
                 >
-                  <ChevronRight className="w-5 h-5" />
+                  <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function CourseForum({
+  courseId = "react-101",
+  courseName = "React Fundamentals",
+}: {
+  courseId?: string;
+  courseName?: string;
+}) {
+  const [newPostOpen, setNewPostOpen] = useState(false);
+  const [replyOpen, setReplyOpen] = useState<number | null>(null);
+
+  const coursePosts = forumData.filter(
+    (post) => post.level === "course" && post.courseId === courseId
+  );
+  const isTeacher =
+    currentUser.role === "teacher" || currentUser.role === "admin";
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="w-full mx-auto max-w-6xl p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <BookOpen className="w-6 h-6 text-purple-600" />
+            <div>
+              <span className="text-gray-800 font-semibold text-xl">
+                {courseName} Forum
+              </span>
+              <Badge
+                variant="secondary"
+                className="bg-purple-100 text-purple-800 ml-2"
+              >
+                <Lock className="w-3 h-3 mr-1" />
+                Course Only
+              </Badge>
+            </div>
+          </div>
+          {isTeacher && (
+            <Dialog open={newPostOpen} onOpenChange={setNewPostOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-purple-600 hover:bg-purple-700">
+                  <Plus className="w-4 h-4 mr-2" />
+                  New Announcement
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Create Course Announcement</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="title">Title</Label>
+                    <Input
+                      id="title"
+                      placeholder="Enter announcement title..."
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="brief">Brief Description</Label>
+                    <Input id="brief" placeholder="Brief description..." />
+                  </div>
+                  <div>
+                    <Label htmlFor="content">Content</Label>
+                    <Textarea
+                      id="content"
+                      placeholder="Write your announcement..."
+                      rows={6}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="tags">Type</Label>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="assignment">Assignment</SelectItem>
+                        <SelectItem value="resources">Resources</SelectItem>
+                        <SelectItem value="announcement">
+                          General Announcement
+                        </SelectItem>
+                        <SelectItem value="discussion">
+                          Discussion Topic
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input type="checkbox" id="pin" />
+                    <Label htmlFor="pin">Pin this post</Label>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => setNewPostOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button onClick={() => setNewPostOpen(false)}>Post</Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
+        </div>
+
+        {/* Course Info */}
+        <Card className="mb-8 bg-gradient-to-r from-purple-50 to-blue-50 border-0">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-purple-100 rounded-xl">
+                <GraduationCap className="w-8 h-8 text-purple-600" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">
+                  {courseName}
+                </h2>
+                <p className="text-gray-600">
+                  Course-specific discussions and announcements
+                </p>
+                <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                  <span>{coursePosts.length} posts</span>
+                  <span>•</span>
+                  <span>Instructor: Dr. Smith</span>
+                  <span>•</span>
+                  <span>45 students enrolled</span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Course Posts */}
+        <div className="space-y-6">
+          {coursePosts.map((post) => (
+            <Card
+              key={post.id}
+              className={`${
+                post.isPinned ? "border-purple-500 bg-purple-50" : "border-0"
+              }`}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    {post.isPinned && (
+                      <Pin className="w-4 h-4 text-purple-600" />
+                    )}
+                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      {post.userName.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-lg">{post.query}</h3>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-600">
+                          by {post.userName}
+                        </span>
+                        <Badge variant="secondary" className="text-xs">
+                          {post.userRole === "teacher"
+                            ? "Instructor"
+                            : "Student"}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                  <Badge className="bg-purple-100 text-purple-800">
+                    {post.tags}
+                  </Badge>
+                </div>
+                <p className="text-gray-700 mb-4">{post.content}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-6 text-sm text-gray-500">
+                    <button className="flex items-center gap-1 hover:text-blue-600">
+                      <ThumbsUp className="w-4 h-4" />
+                      {post.likes}
+                    </button>
+                    <button
+                      className="flex items-center gap-1 hover:text-green-600"
+                      onClick={() =>
+                        setReplyOpen(replyOpen === post.id ? null : post.id)
+                      }
+                    >
+                      <Reply className="w-4 h-4" />
+                      Reply ({post.replies})
+                    </button>
+                    <span className="flex items-center gap-1">
+                      <Eye className="w-4 h-4" />
+                      {post.views}
+                    </span>
+                  </div>
+                  <span className="text-sm text-gray-500">
+                    {new Date(post.createdDate).toLocaleDateString()}
+                  </span>
+                </div>
+
+                {/* Reply Section */}
+                {replyOpen === post.id && (
+                  <div className="mt-6 pt-6 border-t">
+                    <div className="space-y-4">
+                      {mockReplies
+                        .filter((reply) => reply.postId === post.id)
+                        .map((reply) => (
+                          <div
+                            key={reply.id}
+                            className="flex gap-3 p-4 bg-gray-50 rounded-lg"
+                          >
+                            <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
+                              {reply.userName.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium text-sm">
+                                  {reply.userName}
+                                </span>
+                                <Badge variant="outline" className="text-xs">
+                                  {reply.userRole}
+                                </Badge>
+                                <span className="text-xs text-gray-500">
+                                  {new Date(
+                                    reply.createdDate
+                                  ).toLocaleDateString()}
+                                </span>
+                              </div>
+                              <p className="text-sm text-gray-700">
+                                {reply.content}
+                              </p>
+                              <button className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 mt-2">
+                                <ThumbsUp className="w-3 h-3" />
+                                {reply.likes}
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      <div className="flex gap-3">
+                        <div className="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
+                          {currentUser.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="flex-1 flex gap-2">
+                          <Input
+                            placeholder="Write a reply..."
+                            className="flex-1"
+                          />
+                          <Button size="sm">
+                            <Send className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Main Forum System Component
+export default function ForumSystem() {
+  const [currentLevel, setCurrentLevel] = useState<
+    "public" | "general" | "course"
+  >("public");
+  const [selectedCourse, setSelectedCourse] = useState({
+    id: "react-101",
+    name: "React Fundamentals",
+  });
+
+  // Simulate authentication state
+  const isLoggedIn = currentUser.role !== "guest";
+
+  return (
+    <div>
+      {/* Navigation */}
+      <div className="bg-white shadow-sm">
+        <div className="max-w-6xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <h1 className="text-xl font-bold text-gray-900">Forum System</h1>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={currentLevel === "public" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setCurrentLevel("public")}
+                  className="flex items-center gap-2"
+                >
+                  <Globe className="w-4 h-4" />
+                  Public
+                </Button>
+                {isLoggedIn && (
+                  <>
+                    <Button
+                      variant={currentLevel === "general" ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setCurrentLevel("general")}
+                      className="flex items-center gap-2"
+                    >
+                      <Users className="w-4 h-4" />
+                      General Forum
+                    </Button>
+                    <Button
+                      variant={currentLevel === "course" ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setCurrentLevel("course")}
+                      className="flex items-center gap-2"
+                    >
+                      <BookOpen className="w-4 h-4" />
+                      Course Forum
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Badge variant="outline">
+                {currentUser.role === "guest"
+                  ? "Not Logged In"
+                  : `${currentUser.name} (${currentUser.role})`}
+              </Badge>
+              {currentLevel === "course" && isLoggedIn && (
+                <Select
+                  value={selectedCourse.id}
+                  onValueChange={(value) => {
+                    const courses = {
+                      "react-101": "React Fundamentals",
+                      "ml-advanced": "Advanced Machine Learning",
+                      "python-basics": "Python Basics",
+                    };
+                    setSelectedCourse({
+                      id: value,
+                      name: courses[value as keyof typeof courses],
+                    });
+                  }}
+                >
+                  <SelectTrigger className="w-48">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="react-101">
+                      React Fundamentals
+                    </SelectItem>
+                    <SelectItem value="ml-advanced">
+                      Advanced Machine Learning
+                    </SelectItem>
+                    <SelectItem value="python-basics">Python Basics</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Content */}
+      {currentLevel === "public" && <PublicAnnouncements />}
+      {currentLevel === "general" && isLoggedIn && <GeneralForum />}
+      {currentLevel === "course" && isLoggedIn && (
+        <CourseForum
+          courseId={selectedCourse.id}
+          courseName={selectedCourse.name}
+        />
+      )}
+      {!isLoggedIn && currentLevel !== "public" && (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <Card className="max-w-md border-0">
+            <CardContent className="text-center py-12">
+              <Lock className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                Access Restricted
+              </h3>
+              <p className="text-gray-500 mb-6">
+                Please sign in to access this forum level.
+              </p>
+              <Button className="bg-blue-600 hover:bg-blue-700">Sign In</Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
