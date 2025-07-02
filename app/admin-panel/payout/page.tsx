@@ -498,13 +498,13 @@ export default function InstructorPayoutsWithDonations() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="w-full mx-auto max-w-7xl">
+    <div className="min-h-screen bg-gray-50 ">
+      <div className="w-full mx-auto max-w-6xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-3">
             <Command className="w-6 h-6 text-gray-500" />
-            <h1 className="text-2xl font-semibold text-gray-800">
+            <h1 className="text-2xl font-semibold text-gray-800 p-3">
               Instructor Payouts & Donations
             </h1>
           </div>
