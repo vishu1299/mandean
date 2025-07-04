@@ -34,26 +34,32 @@ const CategorySection = () => {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-wrap lg:flex-nowrap justify-center gap-2 sm:gap-4 lg:justify-between my-12 md:gap-5">
-      {categories.map((cat, index) => {
-        const isActive = pathname === cat.path;
-        return (
-          <Link href={cat.path} key={index} className="lg:w-full">
-            <Button
+    <div className="flex justify-center items-center">
+      <div className="flex flex-wrap lg:flex-nowrap justify-center gap-2 sm:gap-4 lg:justify-between my-12  w-[95%]">
+        {categories.map((cat, index) => {
+          const isActive = pathname === cat.path;
+          return (
+            <Link
+              href={cat.path}
               key={index}
-              size="sm"
-              className={`lg:w-full flex items-center border rounded-3xl ${
-                isActive && "bg-blue-510"
-              }`}
+              className="lg:w-full flex justify-center"
             >
-              <Image src={cat.icon} alt={cat.name} width={20} height={20} />
-              <span className={`text-gray-11 ${isActive && "text-white "}`}>
-                {cat.name}
-              </span>
-            </Button>
-          </Link>
-        );
-      })}
+              <Button
+                key={index}
+                size="lg"
+                className={` flex items-center border rounded-3xl ${
+                  isActive && "bg-blue-510"
+                }`}
+              >
+                <Image src={cat.icon} alt={cat.name} width={20} height={20} />
+                <span className={`text-gray-11 ${isActive && "text-white "}`}>
+                  {cat.name}
+                </span>
+              </Button>
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 };

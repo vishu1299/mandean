@@ -65,6 +65,12 @@ const Sidebar = () => {
         <div className="flex justify-end mb-4">
           <DonateButton />
         </div>
+        <Button
+          size="sm"
+          className="bg-black text-white sm:size-sm md:size-md lg:size-xl xl:size-2xl rounded-md"
+        >
+          Contact
+        </Button>
       </div>
 
       <Search className="border-none shadow-none bg-gray-100" />

@@ -8,7 +8,7 @@ const Navbar = () => {
       <div className="h-full flex items-center justify-between px-10">
         <Link href="/student/home" className="flex items-center pl-3">
           <Image
-            src="/xcrino.png"
+            src="/logo.png"
             alt="Logo"
             width={100}
             height={40}

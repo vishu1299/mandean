@@ -36,7 +36,7 @@ const CommunityDiscussions = () => {
 
   return (
     <section className="flex items-center justify-center my-12">
-      <div className="w-[70%] mx-4 sm:mx-8 lg:mx-12">
+      <div className="max-w-full w-[95%]  ">
         <div className="flex justify-between items-center  mb-4">
           <h2 className="text-xl sm:text-2xl">Community Discussions</h2>
           <Button size="sm" className="text-sm bg-blue-500 text-white">

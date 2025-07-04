@@ -1,16 +1,16 @@
-import HeroSection from "../common/hero-section"
-import CategorySection from "./components/category-section"
-import TrendingNow from "./components/trending-now"
-import MostWatched from "./components/most-watched"
-import Sidebar from "./components/sidebar"
-import CommunityDiscussions from "./components/community-discussion"
-import Footer from "../common/footer"
+import HeroSection from "../common/hero-section";
+import CategorySection from "./components/category-section";
+import TrendingNow from "./components/trending-now";
+import MostWatched from "./components/most-watched";
+import Sidebar from "./components/sidebar";
+import CommunityDiscussions from "./components/community-discussion";
+import Footer from "../common/footer";
 
 const Homepage = () => {
   return (
     <div>
-      <div className="flex flex-col md:flex-row justify-center space-x-3">
-        <div className="">
+      <div className="flex flex-col md:flex-row justify-center items-center space-x-3 W-[85%]">
+        <div className="w-[50%]">
           <TrendingNow />
           <MostWatched />
         </div>
@@ -23,7 +23,7 @@ const Homepage = () => {
       </div>
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default Homepage
+export default Homepage;
