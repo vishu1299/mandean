@@ -1,4 +1,3 @@
-import React from "react";
 import Search from "@/components/ui/input-search";
 import { Button } from "@/components/ui/button";
 import FiltersSidebar from "./filters-sidebar";
@@ -25,7 +24,6 @@ const LibrarySection = () => {
           <DonateButton />
         </div>
       </div>
-
       <div className="flex flex-col md:flex-row mt-6 gap-6">
         <div className="md:w-1/4">
           <FiltersSidebar />
@@ -39,3 +37,85 @@ const LibrarySection = () => {
 };
 
 export default LibrarySection;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

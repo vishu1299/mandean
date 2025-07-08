@@ -1,9 +1,112 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Tag, Database, Settings, Star } from "lucide-react";
+import {
+  Tag,
+  Database,
+  Settings,
+  Star,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 export default function Courses() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [entriesPerPage] = useState(5); // You can make this dynamic if needed
+
+  // Sample course data (you would replace this with your actual data)
+  const coursesData = [
+    {
+      id: 1,
+      title: "The Complete 2022 Web Developm...",
+      instructor: "Praveen Vats",
+      category: "Finance",
+      categoryColor: "bg-gray-200 text-gray-800",
+      totalSections: 2,
+      totalLessons: 3,
+      totalEnrollment: 1,
+      status: "active",
+      price: "₹1000",
+      donationCollected: "₹2,450",
+    },
+    {
+      id: 2,
+      title: "Learn Python: The Complete Pyt...",
+      instructor: "Praveen Vats",
+      category: "Web Development",
+      categoryColor: "bg-blue-200 text-blue-800",
+      totalSections: 1,
+      totalLessons: 1,
+      totalEnrollment: 0,
+      status: "active",
+      price: "Free",
+      priceColor: "bg-green-200 text-green-800",
+      donationCollected: "₹1,200",
+    },
+    {
+      id: 3,
+      title: "sddha",
+      instructor: "Praveen Vats",
+      category: "Web Development",
+      categoryColor: "bg-blue-200 text-blue-800",
+      totalSections: 1,
+      totalLessons: 1,
+      totalEnrollment: 0,
+      status: "active",
+      price: "Free",
+      priceColor: "bg-green-200 text-green-800",
+      donationCollected: "₹850",
+    },
+    {
+      id: 4,
+      title: "Without",
+      instructor: "Praveen Vats",
+      category: "Finance",
+      categoryColor: "bg-gray-200 text-gray-800",
+      totalSections: 0,
+      totalLessons: 0,
+      totalEnrollment: 1,
+      status: "active",
+      price: "₹200",
+      donationCollected: "₹500",
+    },
+    {
+      id: 5,
+      title: "Youtube Millionaire",
+      instructor: "Praveen Vats",
+      category: "Test English",
+      categoryColor: "bg-purple-200 text-purple-800",
+      totalSections: 1,
+      totalLessons: 3,
+      totalEnrollment: 0,
+      status: "active",
+      price: "Free",
+      priceColor: "bg-green-200 text-green-800",
+      donationCollected: "₹3,200",
+    },
+    {
+      id: 6,
+      title: "Love hacker",
+      instructor: "Praveen Vats",
+      category: "Finance",
+      categoryColor: "bg-gray-200 text-gray-800",
+      totalSections: 0,
+      totalLessons: 1,
+      totalEnrollment: 1,
+      status: "active",
+      price: "₹5000",
+      donationCollected: "₹1,750",
+    },
+  ];
+
+  // Calculate pagination
+  const totalEntries = coursesData.length;
+  const totalPages = Math.ceil(totalEntries / entriesPerPage);
+  const startIndex = (currentPage - 1) * entriesPerPage;
+  const endIndex = Math.min(startIndex + entriesPerPage, totalEntries);
+  const currentEntries = coursesData.slice(startIndex, endIndex);
+
   return (
     <div className="min-h-screen">
       {/* Main Content */}
@@ -182,235 +285,121 @@ export default function Courses() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    1
-                  </td>
-                  <td className="px-6 py-4">
-                    <div>
-                      <div className="text-sm font-medium text-blue-600">
-                        The Complete 2022 Web Developm...
+                {currentEntries.map((course, index) => (
+                  <tr key={course.id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {startIndex + index + 1}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div>
+                        <div className="text-sm font-medium text-blue-600">
+                          {course.title}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          Instructor: {course.instructor}
+                        </div>
                       </div>
-                      <div className="text-sm text-gray-500">
-                        Instructor: Praveen Vats
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 text-xs font-medium bg-gray-200 text-gray-800 rounded">
-                      Finance
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    <div>Total section: 2</div>
-                    <div>Total lesson: 3</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    Total enrollment: 1
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ₹1000
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ₹2,450
-                  </td>
-                </tr>
-
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    2
-                  </td>
-                  <td className="px-6 py-4">
-                    <div>
-                      <div className="text-sm font-medium text-blue-600">
-                        Learn Python: The Complete Pyt...
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        Instructor: Praveen Vats
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 text-xs font-medium bg-blue-200 text-blue-800 rounded">
-                      Web Development
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    <div>Total section: 1</div>
-                    <div>Total lesson: 1</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    Total enrollment: 0
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 text-xs font-medium bg-green-200 text-green-800 rounded">
-                      Free
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ₹1,200
-                  </td>
-                </tr>
-
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    3
-                  </td>
-                  <td className="px-6 py-4">
-                    <div>
-                      <div className="text-sm font-medium text-blue-600">
-                        sddha
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        Instructor: Praveen Vats
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 text-xs font-medium bg-blue-200 text-blue-800 rounded">
-                      Web Development
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    <div>Total section: 1</div>
-                    <div>Total lesson: 1</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    Total enrollment: 0
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 text-xs font-medium bg-green-200 text-green-800 rounded">
-                      Free
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ₹850
-                  </td>
-                </tr>
-
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    4
-                  </td>
-                  <td className="px-6 py-4">
-                    <div>
-                      <div className="text-sm font-medium text-blue-600">
-                        Without
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        Instructor: Praveen Vats
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 text-xs font-medium bg-gray-200 text-gray-800 rounded">
-                      Finance
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    <div>Total section: 0</div>
-                    <div>Total lesson: 0</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    Total enrollment: 1
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ₹200
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ₹500
-                  </td>
-                </tr>
-
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    5
-                  </td>
-                  <td className="px-6 py-4">
-                    <div>
-                      <div className="text-sm font-medium text-blue-600">
-                        Youtube Millionaire
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        Instructor: Praveen Vats
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 text-xs font-medium bg-purple-200 text-purple-800 rounded">
-                      Test English
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    <div>Total section: 1</div>
-                    <div>Total lesson: 3</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    Total enrollment: 0
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 text-xs font-medium bg-green-200 text-green-800 rounded">
-                      Free
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ₹3,200
-                  </td>
-                </tr>
-
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    6
-                  </td>
-                  <td className="px-6 py-4">
-                    <div>
-                      <div className="text-sm font-medium text-blue-600">
-                        Love hacker
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        Instructor: Praveen Vats
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 text-xs font-medium bg-gray-200 text-gray-800 rounded">
-                      Finance
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    <div>Total section: 0</div>
-                    <div>Total lesson: 1</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    Total enrollment: 1
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ₹5000
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ₹1,750
-                  </td>
-                </tr>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`px-2 py-1 text-xs font-medium rounded ${course.categoryColor}`}
+                      >
+                        {course.category}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      <div>Total section: {course.totalSections}</div>
+                      <div>Total lesson: {course.totalLessons}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      Total enrollment: {course.totalEnrollment}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {course.priceColor ? (
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded ${course.priceColor}`}
+                        >
+                          {course.price}
+                        </span>
+                      ) : (
+                        course.price
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {course.donationCollected}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mt-8 pt-8 px-6 pb-6 border-t border-gray-200">
+            <div className="text-sm text-gray-600">
+              Showing{" "}
+              <span className="font-bold text-gray-900">
+                {currentEntries.length > 0 ? startIndex + 1 : 0}
+              </span>{" "}
+              to <span className="font-bold text-gray-900">{endIndex}</span> of{" "}
+              <span className="font-bold text-gray-900">{totalEntries}</span>{" "}
+              entries
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1 || totalEntries === 0}
+                className="w-12 h-12 p-0 rounded-xl"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </Button>
+
+              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={currentPage === pageNum ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCurrentPage(pageNum)}
+                    className={`w-12 h-12 p-0 rounded-xl font-semibold ${
+                      currentPage === pageNum
+                        ? "bg-gray-900 text-white shadow-lg"
+                        : ""
+                    }`}
+                  >
+                    {pageNum}
+                  </Button>
+                );
+              })}
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages || totalEntries === 0}
+                className="w-12 h-12 p-0 rounded-xl"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
         </div>
       </main>

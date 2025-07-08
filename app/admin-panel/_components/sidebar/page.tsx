@@ -144,6 +144,17 @@ export default function Sidebar() {
               </Button>
             </Link>
 
+            <Link href="/admin-panel/librarry">
+              <Button
+                variant="ghost"
+                className={getButtonStyle("librarry")}
+                onClick={() => handleMenuClick("librarry")}
+              >
+                <BookOpen className="w-4 h-4 mr-3" />
+                library
+              </Button>
+            </Link>
+
             <Link href="/admin-panel/quiz">
               <Button
                 variant="ghost"
