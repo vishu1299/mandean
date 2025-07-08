@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { FaBook } from "react-icons/fa";
 import { LayoutGrid, List } from "lucide-react";
+import BookDetailPage from "./book-details";
 
 type Book = {
   id: number;
@@ -59,11 +60,22 @@ const books: Book[] = images.map((img, index) => ({
 }));
 
 const BooksGrid = () => {
-  const router = useRouter();
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [showDetailPage, setShowDetailPage] = useState(false);
 
-  const handleBookClick = (bookId: number) => {
-    router.push(`/book/${bookId}`);
+  const handleBookClick = (book: Book) => {
+    setSelectedBook(book);
+    setShowDetailPage(true);
   };
+
+  const handleBackToGrid = () => {
+    setShowDetailPage(false);
+    setSelectedBook(null);
+  };
+
+  if (showDetailPage && selectedBook) {
+    return <BookDetailPage book={selectedBook} onBack={handleBackToGrid} />;
+  }
 
   return (
     <section>
@@ -82,7 +94,7 @@ const BooksGrid = () => {
           <div
             key={idx}
             className="bg-white rounded-md shadow p-4 cursor-pointer hover:shadow-lg transition-shadow duration-200"
-            onClick={() => handleBookClick(book.id)}
+            onClick={() => handleBookClick(book)}
           >
             <div className="relative h-64 w-full mb-4 rounded overflow-hidden">
               <Image
